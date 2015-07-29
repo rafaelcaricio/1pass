@@ -3,8 +3,8 @@ from hashlib import md5
 from M2Crypto import EVP
 
 class SaltyString(object):
-    SALTED_PREFIX = "Salted__"
-    ZERO_INIT_VECTOR = "\x00" * 16
+    SALTED_PREFIX = b"Salted__"
+    ZERO_INIT_VECTOR = b"\x00" * 16
 
     def __init__(self, base64_encoded_string):
         decoded_data = b64decode(base64_encoded_string)
@@ -74,8 +74,8 @@ class EncryptionKey(object):
 
     def _derive_openssl(self, key, salt):
         key = key[0:-16]
-        key_and_iv = ""
-        prev = ""
+        key_and_iv = b""
+        prev = b""
         while len(key_and_iv) < 32:
             prev = md5(prev + key + salt).digest()
             key_and_iv += prev

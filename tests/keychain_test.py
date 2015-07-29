@@ -9,7 +9,7 @@ class KeychainTest(TestCase):
     def test_locked_flag(self):
         keychain = Keychain(self.data_path)
         self.assertTrue(keychain.locked)
-        self.assertTrue(keychain.unlock("badger"))
+        self.assertTrue(keychain.unlock("badger".encode("utf-8")))
         self.assertFalse(keychain.locked)
 
     def test_key_by_security_level(self):
@@ -59,7 +59,7 @@ class KeychainItemTest(TestCase):
 
     def test_decrypt(self):
         mock_key = Mock()
-        mock_key.decrypt.return_value = """{"fields":[
+        mock_key.decrypt.return_value = b"""{"fields":[
             {"name":"Username","value":"user","designation":"username"},
             {"value":"abcdef","name":"Password","designation":"password"}
         ]}"""

@@ -21,7 +21,7 @@ class CLITest(TestCase):
     def test_cli_reading_web_form_password_with_multiple_password_attempts(self):
         password_attempts = (i for i in ("incorrect", "badger"))
         cli = self.build_cli(
-            getpass=lambda prompt: password_attempts.next(),
+            getpass=lambda prompt: next(password_attempts).encode("utf-8"),
             arguments=("--path", self.keychain_path, "onetosix",),
         )
         cli.run()
@@ -31,7 +31,7 @@ class CLITest(TestCase):
 
     def test_cli_with_bad_item_name(self):
         cli = self.build_cli(
-            getpass=lambda prompt: "badger",
+            getpass=lambda prompt: "badger".encode("utf-8"),
             arguments=("--path", self.keychain_path, "onetos",),
         )
 
@@ -41,7 +41,7 @@ class CLITest(TestCase):
 
     def test_cli_with_fuzzy_matching(self):
         cli = self.build_cli(
-            getpass=lambda prompt: "badger",
+            getpass=lambda prompt: "badger".encode("utf-8"),
             arguments=("--fuzzy", "--path", self.keychain_path, "onetos",),
         )
         cli.run()

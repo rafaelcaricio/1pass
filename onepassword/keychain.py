@@ -118,7 +118,7 @@ class KeychainItem(object):
             security_level=self.security_level,
         )
         encrypted_json = self._lazily_load("_encrypted_json")
-        decrypted_json = key.decrypt(self._encrypted_json)
+        decrypted_json = key.decrypt(self._encrypted_json).decode("utf-8")
         self._data = json.loads(decrypted_json)
         self.password = self._find_password()
 

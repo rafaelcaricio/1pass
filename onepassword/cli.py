@@ -52,7 +52,7 @@ class CLI(object):
         parser.add_argument("item", help="The name of the password to decrypt")
         parser.add_argument(
             "--path",
-            default=os.environ.get('ONEPASSWORD_KEYCHAIN', DEFAULT_KEYCHAIN_PATH),
+            default=os.environ.get("ONEPASSWORD_KEYCHAIN", DEFAULT_KEYCHAIN_PATH),
             help="Path to your 1Password.agilekeychain file",
         )
         parser.add_argument(
@@ -74,7 +74,7 @@ class CLI(object):
             self._unlock_keychain_prompt()
 
     def _unlock_keychain_stdin(self):
-        password = self.stdin.read().strip()
+        password = self.stdin.read().strip().encode("utf-8")
         self.keychain.unlock(password)
         if self.keychain.locked:
             self.stderr.write("1pass: Incorrect master password\n")
