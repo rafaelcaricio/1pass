@@ -5,6 +5,12 @@ from six.moves import cStringIO as StringIO
 
 from onepassword.cli import CLI
 
+try:
+    EX_DATAERR = os.EX_DATAERR
+except AttributeError:
+    # os.EX_DATAERR is only available on Unix
+    EX_DATAERR = 65
+
 
 class CLITest(TestCase):
     def setUp(self):
@@ -29,7 +35,7 @@ class CLITest(TestCase):
             arguments=("--path", self.keychain_path, "onetos",),
         )
 
-        self.assert_exit_status(os.EX_DATAERR, cli.run)
+        self.assert_exit_status(EX_DATAERR, cli.run)
         self.assert_no_output()
         self.assert_error_output("1pass: Could not find an item named 'onetos'\n")
 
@@ -79,7 +85,7 @@ class CLITest(TestCase):
             arguments=("--no-prompt", "--path", self.keychain_path, "onetosix",),
         )
 
-        self.assert_exit_status(os.EX_DATAERR, cli.run)
+        self.assert_exit_status(EX_DATAERR, cli.run)
         self.assert_no_output()
         self.assert_error_output("1pass: Incorrect master password\n")
 

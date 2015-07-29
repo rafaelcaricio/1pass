@@ -6,6 +6,12 @@ import sys
 from . import Keychain
 
 DEFAULT_KEYCHAIN_PATH = "~/Dropbox/1Password.agilekeychain"
+try:
+    EX_DATAERR = os.EX_DATAERR
+except AttributeError:
+    # os.EX_DATAERR is only available on Unix
+    EX_DATAERR = 65
+
 
 class CLI(object):
     """
@@ -39,7 +45,7 @@ class CLI(object):
             self.stderr.write("1pass: Could not find an item named '%s'\n" % (
                 self.arguments.item,
             ))
-            sys.exit(os.EX_DATAERR)
+            sys.exit(EX_DATAERR)
 
     def argument_parser(self):
         parser = argparse.ArgumentParser()
@@ -72,7 +78,7 @@ class CLI(object):
         self.keychain.unlock(password)
         if self.keychain.locked:
             self.stderr.write("1pass: Incorrect master password\n")
-            sys.exit(os.EX_DATAERR)
+            sys.exit(EX_DATAERR)
 
     def _unlock_keychain_prompt(self):
         while self.keychain.locked:
