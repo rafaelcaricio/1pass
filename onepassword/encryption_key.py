@@ -54,7 +54,7 @@ class EncryptionKey(object):
         return self._strip_padding(aes.update(encrypted_data) + aes.final())
 
     def _strip_padding(self, decrypted):
-        padding_size = ord(decrypted[-1])
+        padding_size = ord(decrypted[-1:])
         if padding_size >= 16:
             return decrypted
         else:
@@ -68,18 +68,18 @@ class EncryptionKey(object):
             32,
         )
         return (
-            key_and_iv[0:16],
+            key_and_iv[:16],
             key_and_iv[16:],
         )
 
     def _derive_openssl(self, key, salt):
-        key = key[0:-16]
+        key = key[:-16]
         key_and_iv = b""
         prev = b""
         while len(key_and_iv) < 32:
             prev = md5(prev + key + salt).digest()
             key_and_iv += prev
         return (
-            key_and_iv[0:16],
+            key_and_iv[:16],
             key_and_iv[16:],
         )
