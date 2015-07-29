@@ -1,6 +1,7 @@
 import os
 from unittest import TestCase
-from StringIO import StringIO
+
+from six.moves import cStringIO as StringIO
 
 from onepassword.cli import CLI
 

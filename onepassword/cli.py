@@ -3,7 +3,7 @@ import getpass
 import os
 import sys
 
-from onepassword import Keychain
+from . import Keychain
 
 DEFAULT_KEYCHAIN_PATH = "~/Dropbox/1Password.agilekeychain"
 

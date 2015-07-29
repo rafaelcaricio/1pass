@@ -1,8 +1,13 @@
+from __future__ import absolute_import
+
 import json
 import os
-from fuzzywuzzy import process
+from functools import reduce
 
-from onepassword.encryption_key import EncryptionKey
+from fuzzywuzzy import process
+from six.moves import map
+
+from .encryption_key import EncryptionKey
 
 
 class Keychain(object):
@@ -14,7 +19,7 @@ class Keychain(object):
 
     def unlock(self, password):
         unlocker = lambda key: key.unlock(password)
-        unlock_results = map(unlocker, self._encryption_keys.values())
+        unlock_results = list(map(unlocker, self._encryption_keys.values()))
         result = reduce(lambda x, y: x and y, unlock_results)
         self._locked = not result
         return result
@@ -27,7 +32,7 @@ class Keychain(object):
         """
         match = process.extractOne(
             name,
-            self._items.keys(),
+            list(self._items.keys()),
             score_cutoff=(fuzzy_threshold-1),
         )
         if match:
