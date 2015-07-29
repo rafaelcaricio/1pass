@@ -1,4 +1,3 @@
 mock
 nose
-M2Crypto
 fuzzywuzzy

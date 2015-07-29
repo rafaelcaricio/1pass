@@ -1,6 +1,12 @@
 from base64 import b64decode
 from hashlib import md5
-from M2Crypto import EVP
+
+from cryptography.hazmat.backends import default_backend
+from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
+from cryptography.hazmat.primitives.hashes import SHA1
+from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
+
+_backend = default_backend()
 
 class SaltyString(object):
     SALTED_PREFIX = b"Salted__"
@@ -50,8 +56,9 @@ class EncryptionKey(object):
         return self.decrypt(self._validation) == self._decrypted_key
 
     def _aes_decrypt(self, key, iv, encrypted_data):
-        aes = EVP.Cipher("aes_128_cbc", key, iv, key_as_bytes=False, padding=False, op=0)
-        return self._strip_padding(aes.update(encrypted_data) + aes.final())
+        cipher = Cipher(algorithms.AES(key), modes.CBC(iv), backend=_backend)
+        aes = cipher.decryptor()
+        return self._strip_padding(aes.update(encrypted_data) + aes.finalize())
 
     def _strip_padding(self, decrypted):
         padding_size = ord(decrypted[-1:])
@@ -61,12 +68,14 @@ class EncryptionKey(object):
             return decrypted[:-padding_size]
 
     def _derive_pbkdf2(self, password):
-        key_and_iv = EVP.pbkdf2(
-            password,
-            self._encrypted_key.salt,
-            self.iterations,
-            32,
-        )
+        kdf = PBKDF2HMAC(
+            algorithm=SHA1(),
+            length=32,
+            salt=self._encrypted_key.salt,
+            iterations=self.iterations,
+            backend=_backend)
+
+        key_and_iv = kdf.derive(password)
         return (
             key_and_iv[:16],
             key_and_iv[16:],
