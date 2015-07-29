@@ -18,6 +18,7 @@ class Keychain(object):
         self._locked = True
 
     def unlock(self, password):
+        """Unlock keychain with bytes encoded password."""
         unlocker = lambda key: key.unlock(password)
         unlock_results = list(map(unlocker, self._encryption_keys.values()))
         result = reduce(lambda x, y: x and y, unlock_results)
