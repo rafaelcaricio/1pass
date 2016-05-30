@@ -24,7 +24,6 @@ setup(
     classifiers=[],
     packages=["onepassword"],
     entry_points={'console_scripts': ['1pass=onepassword.cli:cli']},
-
-    tests_require=["nose", "mock"],
-    test_suite="nose.collector",
+    setup_requires=["pytest-runner"],
+    tests_require=["pytest", "mock"],
 )

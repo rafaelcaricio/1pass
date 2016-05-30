@@ -38,10 +38,10 @@ class CLITest(TestCase):
         def keyboard_interrupt(prompt):
             raise KeyboardInterrupt()
 
-        args = ('--path', self.keychain_path, 'onetosix')
+        args = ('--path', self.keychain_path, '--no-prompt', 'onetosix')
         with patch('getpass.getpass', lambda prompt: keyboard_interrupt):
             result = self.runner.invoke(cli, args)
-        assert result.exit_code == -1
+        assert result.exit_code > 0
 
     def test_correct_password_from_stdin(self):
         args = ('--no-prompt', '--path', self.keychain_path, 'onetosix')

@@ -11,9 +11,13 @@ DEFAULT_KEYCHAIN_PATH = "~/Dropbox/1Password.agilekeychain"
 
 @click.command()
 @click.argument('item')
-@click.option('--path', envvar='ONEPASSWORD_KEYCHAIN', default=DEFAULT_KEYCHAIN_PATH, help="Path to your 1Password.agilekeychain file")
-@click.option('--fuzzy', is_flag=True, help="Perform fuzzy matching on the item")
-@click.option('--no-prompt', is_flag=True, help="Don't prompt for a password, read from STDIN instead")
+@click.option('--path', envvar='ONEPASSWORD_KEYCHAIN',
+              default=DEFAULT_KEYCHAIN_PATH,
+              help="Path to your 1Password.agilekeychain file")
+@click.option('--fuzzy', is_flag=True,
+              help="Perform fuzzy matching on the item")
+@click.option('--no-prompt', is_flag=True,
+              help="Don't prompt for a password, read from STDIN instead")
 def cli(item, path, fuzzy, no_prompt):
     try:
         keychain = Keychain(path)
