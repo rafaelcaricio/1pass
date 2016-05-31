@@ -10,7 +10,7 @@ Command line usage
 
 To get a password::
 
-    1pass mail.google.com
+    1pass unlock mail.google.com
 
 By default this will look in ``~/Dropbox/1Password.agilekeychain``. If that's
 not where you keep your keychain::
