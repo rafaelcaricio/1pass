@@ -6,14 +6,14 @@ from onepassword.encryption_key import SaltyString, EncryptionKey
 
 class SaltyStringTest(TestCase):
     def test_unsalted_data(self):
-        unsalted = SaltyString(b64encode("Unsalted data"))
-        self.assertEquals("\x00" * 16, unsalted.salt)
-        self.assertEquals("Unsalted data", unsalted.data)
+        unsalted = SaltyString(b64encode(b"Unsalted data"))
+        self.assertEquals(b"\x00" * 16, unsalted.salt)
+        self.assertEquals(b"Unsalted data", unsalted.data)
 
     def test_salted_data(self):
-        salted = SaltyString(b64encode("Salted__SSSSSSSSDDDDDDDD"))
-        self.assertEquals("SSSSSSSS", salted.salt)
-        self.assertEquals("DDDDDDDD", salted.data)
+        salted = SaltyString(b64encode(b"Salted__SSSSSSSSDDDDDDDD"))
+        self.assertEquals(b"SSSSSSSS", salted.salt)
+        self.assertEquals(b"DDDDDDDD", salted.data)
 
 
 class EncryptionKeyTest(TestCase):
@@ -43,13 +43,13 @@ class EncryptionKeyTest(TestCase):
 
     def test_unlocking_with_correct_password(self):
         key = EncryptionKey(**self.example_data)
-        unlock_result = key.unlock(password="badger")
+        unlock_result = key.unlock(password="badger".encode("utf-8"))
 
         self.assertTrue(unlock_result)
 
     def test_unlocking_with_incorrect_password(self):
         key = EncryptionKey(**self.example_data)
-        unlock_result = key.unlock(password="not right")
+        unlock_result = key.unlock(password="not right".encode("utf-8"))
 
         self.assertFalse(unlock_result)
 

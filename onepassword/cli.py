@@ -9,6 +9,12 @@ from .keychain import Keychain
 
 DEFAULT_KEYCHAIN_PATH = "~/Dropbox/1Password.agilekeychain"
 
+try:
+    EX_DATAERR = os.EX_DATAERR
+except AttributeError:
+    # os.EX_DATAERR is only available on Unix
+    EX_DATAERR = 65
+
 
 @click.command()
 @click.argument('item')
@@ -28,7 +34,7 @@ def cli(item, path, fuzzy, no_prompt):
             keychain.unlock(password)
             if keychain.locked:
                 click.echo("1pass: Incorrect master password", err=True)
-                sys.exit(os.EX_DATAERR)
+                sys.exit(EX_DATAERR)
         else:
             while keychain.locked:
                 keychain.unlock(getpass.getpass("Master password: "))
@@ -40,6 +46,6 @@ def cli(item, path, fuzzy, no_prompt):
             click.echo("Password into clipboard!")
         else:
             click.echo("1pass: Could not find an item named '%s'" % (item), err=True)
-            sys.exit(os.EX_DATAERR)
-    except Exception as e:
+            sys.exit(EX_DATAERR)
+    except KeyError as e:
         raise click.ClickException(str(e))
