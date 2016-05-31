@@ -3,6 +3,7 @@ import os
 import sys
 
 import click
+import pyperclip
 
 from .keychain import Keychain
 
@@ -35,9 +36,10 @@ def cli(item, path, fuzzy, no_prompt):
         found_item = keychain.item(item, 70 if fuzzy else 100)
 
         if found_item is not None:
-            click.echo(found_item.password)
+            pyperclip.copy(found_item.password)
+            click.echo("Password into clipboard!")
         else:
             click.echo("1pass: Could not find an item named '%s'" % (item), err=True)
             sys.exit(os.EX_DATAERR)
     except Exception as e:
-        raise click.ClickException(e.message)
+        raise click.ClickException(str(e))

@@ -7,7 +7,7 @@ VERSION = "0.2.1"
 
 def readme():
     """ Load the contents of the README file """
-    readme_path = os.path.join(os.path.dirname(__file__), "README.txt")
+    readme_path = os.path.join(os.path.dirname(__file__), "README.md")
     with open(readme_path, "r") as f:
         return f.read()
 
@@ -18,7 +18,7 @@ setup(
     author_email="george@georgebrock.com",
     description="A Python library and command line interface for 1Password",
     long_description=readme(),
-    install_requires=["click", "M2Crypto", "fuzzywuzzy"],
+    install_requires=["click", "M2Crypto", "fuzzywuzzy", "pyperclip"],
     license="MIT",
     url="http://github.com/georgebrock/1pass",
     classifiers=[],
