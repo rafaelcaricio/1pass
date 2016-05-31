@@ -60,7 +60,7 @@ def unlock_password(item, path, fuzzy, no_prompt):
 def list_items(path):
     try:
         keychain = Keychain(path)
-        for item in keychain.list_items():
+        for item in sorted(keychain.list_items()):
             click.echo(item)
     except Exception as e:
         raise click.ClickException(str(e))
