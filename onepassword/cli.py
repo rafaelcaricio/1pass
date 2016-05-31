@@ -16,16 +16,20 @@ except AttributeError:
     EX_DATAERR = 65
 
 
-@click.command()
+cli = click.Group(context_settings=dict(help_option_names=['-h', '--help']))
+
+keychain_option = click.option('--path', envvar='ONEPASSWORD_KEYCHAIN',
+                               default=DEFAULT_KEYCHAIN_PATH,
+                               help="Path to your 1Password.agilekeychain file")
+
+@cli.command('unlock')
 @click.argument('item')
-@click.option('--path', envvar='ONEPASSWORD_KEYCHAIN',
-              default=DEFAULT_KEYCHAIN_PATH,
-              help="Path to your 1Password.agilekeychain file")
+@keychain_option
 @click.option('--fuzzy', is_flag=True,
               help="Perform fuzzy matching on the item")
 @click.option('--no-prompt', is_flag=True,
               help="Don't prompt for a password, read from STDIN instead")
-def cli(item, path, fuzzy, no_prompt):
+def unlock_password(item, path, fuzzy, no_prompt):
     try:
         keychain = Keychain(path)
 
@@ -47,5 +51,16 @@ def cli(item, path, fuzzy, no_prompt):
         else:
             click.echo("1pass: Could not find an item named '%s'" % (item), err=True)
             sys.exit(EX_DATAERR)
-    except KeyError as e:
+    except Exception as e:
+        raise click.ClickException(str(e))
+
+
+@cli.command('list')
+@keychain_option
+def list_items(path):
+    try:
+        keychain = Keychain(path)
+        for item in keychain.list_items():
+            click.echo(item)
+    except Exception as e:
         raise click.ClickException(str(e))

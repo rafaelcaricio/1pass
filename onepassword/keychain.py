@@ -12,10 +12,16 @@ from .encryption_key import EncryptionKey
 
 class Keychain(object):
     def __init__(self, path):
+        self._items = None
         self._path = os.path.expanduser(path)
         self._load_encryption_keys()
         self._load_item_list()
         self._locked = True
+
+    def list_items(self):
+        if self._items is None:
+            return []
+        return self._items.keys()
 
     def unlock(self, password):
         """Unlock keychain with bytes encoded password."""
